@@ -1,4 +1,3 @@
-import processing.video.*;
 import processing.sound.*;
 
 OPC opc;
