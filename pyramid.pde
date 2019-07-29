@@ -1,16 +1,16 @@
+import processing.video.*;
 import processing.sound.*;
 
 OPC opc;
 
 // For soundBar
 Amplitude amplitude;
-FFT fft;
 AudioIn in;
 int bands = 1024;
 float[] spectrum = new float[bands];
 
 void setup() {
-  size(384, 282);
+  size(300, 300);
 
   opc = new OPC(this, "127.0.0.1", 7890);
   noStroke();
@@ -18,10 +18,8 @@ void setup() {
 
   // For soundBar
   amplitude = new Amplitude(this);
-  fft = new FFT(this, bands);
   in = new AudioIn(this, 0);
   in.start();
-  fft.input(in);
   amplitude.input(in);
 
   // SOME OTHER STUFF
@@ -43,10 +41,6 @@ void setupMapping() {
   int SOUTH = 512 * 2;
   int WEST = 512 * 3;
   int SPECIAL = 512 * 4;
-
-
-  // Order is always LEFT-RIGHT-TOP-BOTTOM
-  // Pay attention to increment the INDEX number
 
   float centerX = width / 2;
   float centerY = height / 2;
@@ -132,7 +126,7 @@ void setupMapping() {
 
 }
 
-int TIME_PER_EFFECT = 10 * 1000; // in millis
+int TIME_PER_EFFECT = 15 * 1000; // in millis
 int NUMBER_OF_EFFECTS = 2;
 int currentEffect = -1;
 int timeOfLastEffectChange = 0 - TIME_PER_EFFECT;
@@ -145,12 +139,16 @@ void draw() {
     shouldSetup = true;
   }
 
+  pushMatrix();
+
+  boolean onBeat = detectBeat();
+
   switch (currentEffect % NUMBER_OF_EFFECTS) {
     case 0:
-      colorWheel(shouldSetup);
+      colorWheel(shouldSetup, onBeat);
       break;
     case 1:
-      soundBar(shouldSetup);
+      soundBar(shouldSetup, onBeat);
       break;
     /**
       == TO ADD A NEW EFFECT ==
@@ -161,22 +159,71 @@ void draw() {
     **/
   }
 
+  popMatrix();
+
+  if (onBeat) {
+    print("Beat\n");
+    fill(255);
+  } else {
+    fill(0);
+  }
+  rect(10, 10, 20, 20);
+
 }
 
-int COLOR_WHEEL_SLICE_SIZE = 2;
+
+
+// :: Beat Detect Variables
+// how many draw loop frames before the beatCutoff starts to decay
+// so that another beat can be triggered.
+// frameRate() is usually around 60 frames per second,
+// so 20 fps = 3 beats per second, meaning if the song is over 180 BPM,
+// we wont respond to every beat.
+int beatHoldFrames = 20;
+
+// what amplitude level can trigger a beat?
+float beatThreshold = 0.01;
+
+// When we have a beat, beatCutoff will be reset to 1.1*beatThreshold, and then decay
+// Level must be greater than beatThreshold and beatCutoff before the next beat can trigger.
+float beatCutoff = 0;
+float beatDecayRate = 0.98; // how fast does beat cutoff decay?
+int framesSinceLastBeat = 0; // once this equals beatHoldFrames, beatCutoff starts to decay.
+
+boolean detectBeat() {
+  float level = amplitude.analyze();
+
+  if (level  > beatCutoff && level > beatThreshold) {
+    beatCutoff = level * 1.2;
+    framesSinceLastBeat = 0;
+    return true;
+  } else {
+    if (framesSinceLastBeat <= beatHoldFrames){
+      framesSinceLastBeat++;
+    }
+    else{
+      beatCutoff *= beatDecayRate;
+      beatCutoff = max(beatCutoff, beatThreshold);
+    }
+  }
+  return false;
+}
+
+int COLOR_WHEEL_SLICE_SIZE = 3;
+int COLOR_WHEEL_ROTATION_RATE = 2;
 int colorWheelRotationAngle = 0;
 int colorWheelSlicesPerThird = 120 / COLOR_WHEEL_SLICE_SIZE;
 int colorWheelColorChangePerSlice = 256 / colorWheelSlicesPerThird;
 int[][] colorWheelRGBStages = {{-1, +1, 0}, {0, -1, +1}, {+1, 0, -1}};
 
-void colorWheel(boolean shouldSetup) {
+void colorWheel(boolean shouldSetup, boolean onBeat) {
   if (shouldSetup) {
     colorWheelRotationAngle = 0;
     background(0);
     colorMode(RGB, 255);
   }
 
-  translate(width/2, height/2); // setting the center of the rotation to middle of the window
+  translate(width/2, height/2);
   rotate(radians(colorWheelRotationAngle));
 
   int r = 255;
@@ -191,7 +238,7 @@ void colorWheel(boolean shouldSetup) {
 
     for (int i = 0; i < colorWheelSlicesPerThird; i += 1) {
       fill(r, g, b);
-      arc(0, 0, width*0.9, width*0.9, radians(degree), radians(degree + COLOR_WHEEL_SLICE_SIZE));
+      arc(0, 0, width, width, radians(degree), radians(degree + COLOR_WHEEL_SLICE_SIZE));
       r += rChange * colorWheelColorChangePerSlice;
       g += gChange * colorWheelColorChangePerSlice;
       b += bChange * colorWheelColorChangePerSlice;
@@ -199,18 +246,21 @@ void colorWheel(boolean shouldSetup) {
     }
   }
 
-  colorWheelRotationAngle += COLOR_WHEEL_SLICE_SIZE;
+  colorWheelRotationAngle += COLOR_WHEEL_ROTATION_RATE;
 }
 
 
-int SOUND_BAR_HISTORY = 400;
+int SOUND_BAR_HISTORY = 180; // ~3s
 float[] soundBarPrevLevels = new float[SOUND_BAR_HISTORY];
 int soundBarCyclicIndex = 0;
 float soundBarNormalizedMax = 1;
 
-void soundBar(boolean shouldSetup) {
+void soundBar(boolean shouldSetup, boolean onBeat) {
   if (shouldSetup) {
     colorMode(HSB, 255);
+    for (int i = 0; i < SOUND_BAR_HISTORY; i++) {
+      soundBarPrevLevels[i] = 0.0;
+    }
   }
 
   float level = amplitude.analyze();
