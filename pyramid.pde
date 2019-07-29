@@ -1,15 +1,28 @@
+import processing.sound.*;
+
 OPC opc;
 
-int TIME_PER_EFFECT = 10 * 1000; // in millis
-int NUMBER_OF_EFFECTS = 1;
-int currentEffect = -1;
-int timeOfLastEffectChange = 0;
+// For soundBar
+Amplitude amplitude;
+FFT fft;
+AudioIn in;
+int bands = 1024;
+float[] spectrum = new float[bands];
 
 void setup() {
   size(384, 282);
 
   opc = new OPC(this, "127.0.0.1", 7890);
+  noStroke();
   setupMapping();
+
+  // For soundBar
+  amplitude = new Amplitude(this);
+  fft = new FFT(this, bands);
+  in = new AudioIn(this, 0);
+  in.start();
+  fft.input(in);
+  amplitude.input(in);
 
   // SOME OTHER STUFF
 }
@@ -119,6 +132,11 @@ void setupMapping() {
 
 }
 
+int TIME_PER_EFFECT = 10 * 1000; // in millis
+int NUMBER_OF_EFFECTS = 2;
+int currentEffect = -1;
+int timeOfLastEffectChange = 0;
+
 void draw() {
   boolean shouldSetup = false;
   if (timeOfLastEffectChange + TIME_PER_EFFECT < millis()) {
@@ -129,7 +147,10 @@ void draw() {
 
   switch (currentEffect % 1) {
     case 0:
-      colorWheel(shouldSetup);
+//      colorWheel(shouldSetup);
+//      break;
+    case 1:
+      soundBar(shouldSetup);
       break;
     /**
       == TO ADD A NEW EFFECT ==
@@ -143,7 +164,6 @@ void draw() {
 }
 
 int COLOR_WHEEL_SLICE_SIZE = 2;
-
 int colorWheelRotationAngle = 0;
 int colorWheelSlicesPerThird = 120 / COLOR_WHEEL_SLICE_SIZE;
 int colorWheelColorChangePerSlice = 256 / colorWheelSlicesPerThird;
@@ -151,9 +171,9 @@ int[][] colorWheelRGBStages = {{-1, +1, 0}, {0, -1, +1}, {+1, 0, -1}};
 void colorWheel(boolean shouldSetup) {
   if (shouldSetup) {
     colorWheelRotationAngle = 0;
+    translate(width/2, height/2); // setting the center of the rotation to middle of the window
   }
 
-  translate(width/2, height/2); // setting the center of the rotation to middle of the window
   rotate(radians(colorWheelRotationAngle));
 
   int r = 255;
@@ -177,4 +197,171 @@ void colorWheel(boolean shouldSetup) {
   }
 
   colorWheelRotationAngle += COLOR_WHEEL_SLICE_SIZE;
+}
+
+
+int LEVELS = 400;
+float[] prevLevels = new float[LEVELS];
+int cyclicIndex = 0;
+float normalizedMax = 1;
+
+void soundBar(boolean shouldSetup) {
+  float level = amplitude.analyze();
+
+  background(0, 0);
+
+  int spacing = 3;
+  int w = width / (LEVELS * spacing);
+  int minHeight = 5;
+
+  prevLevels[cyclicIndex++ % LEVELS] = level;
+
+  float recentMax = 0;
+  for (float prevLevel : prevLevels) {
+    recentMax = max(recentMax, prevLevel);
+  }
+
+  float h = map(level, 0, normalizedMax, minHeight, height);
+
+  float hueValue = map(h, minHeight, height, 0, 255);
+
+  colorMode(HSB, 255);
+  fill(hueValue, 255, 255, 255);
+
+  rect(0, height/2 - h / 2, width, h);
+  rect(width/2 - h / 2, 0, h, width);
+
+  if (recentMax > 0.01 && recentMax < normalizedMax / 2) {
+    normalizedMax *= 0.95;
+    print("Dropping normalizedMax to", normalizedMax, "\n");
+  } else if (recentMax > normalizedMax * 1.4) {
+    normalizedMax *= 1.05;
+    print("Upping normalizedMax to", normalizedMax, "\n");
+  }
+}
+
+int lastNonZeroIndexRunning = -1;
+void soundBar2(boolean shouldSetup) {
+  translate(width/2, height/2); // setting the center of the rotation to middle of the window
+
+  fft.analyze(spectrum);
+
+  // Normalize
+  background(255, 255, 255, 100);
+  stroke(237, 34, 93, 120);
+
+  // min radius of ellipse
+  int minRad = 2;
+
+  // max radius of ellipse
+  int maxRad = height;
+
+  int len = spectrum.length;
+
+  int lastNonZeroIndex = 0;
+  // for (int index = 0; index < len; index++){
+  //   // Clip
+  //   if (abs(spectrum[index]) < 0.001) {
+  //     spectrum[index] = 0;
+  //   } else {
+  //     lastNonZeroIndex = index;
+  //   }
+  // }
+
+  // if (lastNonZeroIndexRunning == -1) {
+  //   lastNonZeroIndexRunning = lastNonZeroIndex;
+  // } else {
+  //   lastNonZeroIndexRunning += max(-10, min(10, lastNonZeroIndex - lastNonZeroIndexRunning));
+  // }
+
+  // len = lastNonZeroIndexRunning + 1;
+
+  for (int lag = 0; lag < len; lag++){
+    float sum = 0;
+    for (int index = 0; index < len; index++){
+      int indexLagged = index+lag;
+      float sound1 = spectrum[index];
+      float sound2 = spectrum[indexLagged % len];
+      float product = sound1 * sound2;
+      sum += product;
+    }
+
+    // average to a value between -1 and 1
+    spectrum[lag] = sum/len;
+  }
+
+  float biggestVal = 0;
+  for (int index = 0; index < len; index++){
+    if (abs(spectrum[index]) > biggestVal) {
+      biggestVal = abs(spectrum[index]);
+    }
+  }
+  // dont divide by zero
+  if (biggestVal != 0) {
+    for (int index = 0; index < len; index++) {
+      spectrum[index] /= biggestVal;
+    }
+  }
+
+  // draw a circular shape
+  beginShape();
+
+  for (int i = 0; i < len; i++) {
+    float angle = map(i, 0, len, 0, HALF_PI);
+    float offset = map(abs(spectrum[i]), 0, 1, 0, maxRad) + minRad;
+    float x = (offset) * cos(angle);
+    float y = (offset) * sin(angle);
+    curveVertex(x, y);
+  }
+
+  for (int i = 0; i < len; i++) {
+    float angle = map(i, 0, len, HALF_PI, PI);
+    float offset = map(abs(spectrum[len - i - 1]), 0, 1, 0, maxRad) + minRad;
+    float x = (offset) * cos(angle);
+    float y = (offset) * sin(angle);
+    curveVertex(x, y);
+  }
+
+  // semi circle with mirrored
+  for (int i = 0; i < len; i++) {
+    float angle = map(i, 0, len, PI, HALF_PI + PI);
+    float offset = map(abs(spectrum[i]), 0, 1, 0, maxRad) + minRad;
+    float x = (offset) * cos(angle);
+    float y = (offset) * sin(angle);
+    curveVertex(x, y);
+  }
+
+  for (int i = 0; i < len; i++) {
+    float angle = map(i, 0, len, HALF_PI + PI, TWO_PI);
+    float offset = map(abs(spectrum[len - i - 1]), 0, 1, 0, maxRad) + minRad;
+    float x = (offset) * cos(angle);
+    float y = (offset) * sin(angle);
+    curveVertex(x, y);
+  }
+
+
+  endShape(CLOSE);
+
+  // background(0);
+  // for(int i = 0; i < spectrum.length; i++){
+  //   // The result of the FFT is normalized
+  //   // draw the line for frequency band i scaling it up by 5 to get more amplitude.
+  //   line( i, height, i, spectrum[i]*height*5 );
+  //   //ellipse(i, height / 2 - spectrum[i]* 5, 10, 10);
+  // }
+
+// global _prev_spectrum
+//     y = np.copy(interpolate(y, config.N_PIXELS // 2))
+//     common_mode.update(y)
+//     diff = y - _prev_spectrum
+//     _prev_spectrum = np.copy(y)
+//     # Color channel mappings
+//     r = r_filt.update(y - common_mode.value)
+//     g = np.abs(diff)
+//     b = b_filt.update(np.copy(y))
+//     # Mirror the color channels for symmetric output
+//     r = np.concatenate((r[::-1], r))
+//     g = np.concatenate((g[::-1], g))
+//     b = np.concatenate((b[::-1], b))
+//     output = np.array([r, g,b]) * 255
 }
