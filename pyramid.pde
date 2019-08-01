@@ -25,14 +25,14 @@ void setup() {
   // SOME OTHER STUFF
 }
 
-int TIME_PER_EFFECT = 15 * 1000; // in millis
+int MILLIS_PER_EFFECT = 15 * 1000;
 int effectIndex = -1;
 PyramidEffect currentEffect;
-int timeOfLastEffectChange = -1 - TIME_PER_EFFECT;
+int millisOfLastEffectChange = -1 - MILLIS_PER_EFFECT;
 
 void draw() {
-  if (timeOfLastEffectChange + TIME_PER_EFFECT < millis()) {
-    timeOfLastEffectChange = millis();
+  if (millisOfLastEffectChange + MILLIS_PER_EFFECT < millis()) {
+    millisOfLastEffectChange = millis();
     effectIndex = (effectIndex + 1) % effects.length;
     currentEffect = effects[effectIndex];
     currentEffect.reset(this);
@@ -52,5 +52,4 @@ void draw() {
     fill(0);
   }
   rect(10, 10, 20, 20);
-
 }
