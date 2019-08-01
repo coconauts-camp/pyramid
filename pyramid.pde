@@ -1,7 +1,11 @@
 BeatDetector beatDetector;
 
 PyramidEffect[] effects = {
-  new ColorwheelEffect(),
+  new HSB1ColorwheelEffect(),
+  new HSB2ColorwheelEffect(),
+  new RGBColorwheelEffect(),
+  new HSB1ColorfadeEffect(),
+  new HSB2ColorfadeEffect(),
   new SoundBarEffect(),
 };
 
