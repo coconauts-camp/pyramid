@@ -59,78 +59,69 @@ void setupLedMapping(PApplet parent) {
   //            S
 
   // Top tier
-  // 109.8
   halfSize = Pyramid.l1Size / 2;
-  // 58.9
 
   x = centerX - halfSize;
-  print("x", x, "\n");
-  // 95.1
-  print("x", x, "\n");
   opc.ledStrip(WEST  + 6 * 64, 64, x, centerY - 46/2 - 1.5, 1, radians(90), false);
-  print("WEST 1", centerY - 46/2 - 1.5, "\n");
-  // 125.5
   opc.ledStrip(WEST  + 7 * 64, 46, x, centerY + 64/2 + 1.5, 1, radians(90), false);
-  print("WEST 2", centerY + 64/2 + 1.5, "\n");
-  // 183.5
 
   x = centerX + halfSize;
-  opc.ledStrip(EAST  + 6 * 64, 64, x, centerY + 46/2 + 1.5, 1, radians(270), false);
-  opc.ledStrip(EAST  + 7 * 64, 46, x, centerY - 64/2 - 1.5, 1, radians(270), false);
+  opc.ledStrip(EAST  + 0 * 64, 64, x, centerY + 46/2 + 1.5, 1, radians(270), false);
+  opc.ledStrip(EAST  + 1 * 64, 46, x, centerY - 64/2 - 1.5, 1, radians(270), false);
 
   y = centerY - halfSize;
-  opc.ledStrip(NORTH + 6 * 64, 64, centerX + 46/2 + 1.5, y, 1, radians(180), false);
-  opc.ledStrip(NORTH + 7 * 64, 46, centerX - 64/2 - 1.5, y, 1, radians(180), false);
+  opc.ledStrip(NORTH + 0 * 64, 64, centerX + 46/2 + 1.5, y, 1, radians(180), false);
+  opc.ledStrip(NORTH + 1 * 64, 46, centerX - 64/2 - 1.5, y, 1, radians(180), false);
 
   y = centerY + halfSize;
-  opc.ledStrip(SOUTH + 6 * 64, 64, centerX - 46/2 - 1.5, y, 1, 0, false);
-  opc.ledStrip(SOUTH + 7 * 64, 46, centerX + 64/2 + 1.5, y, 1, 0, false);
+  opc.ledStrip(SOUTH + 0 * 64, 64, centerX - 46/2 - 1.5, y, 1, 0, false);
+  opc.ledStrip(SOUTH + 1 * 64, 46, centerX + 64/2 + 1.5, y, 1, 0, false);
 
   // Second tier
   halfSize = Pyramid.l2Size / 2;
 
   x = centerX - halfSize;
-  opc.ledStrip(WEST + 3 * 64, 64, x, centerY - (64+19)/2 - 3, 1, radians(90), false);
-  opc.ledStrip(WEST + 4 * 64, 64, x, centerY + (64-19)/2 + 0, 1, radians(90), false);
-  opc.ledStrip(WEST + 5 * 64, 19, x, centerY + (64+64)/2 + 3, 1, radians(90), false);
+  opc.ledStrip(WEST + 2 * 64, 64, x, centerY - (64+19)/2 - 3, 1, radians(90), false);
+  opc.ledStrip(WEST + 3 * 64, 64, x, centerY + (64-19)/2 + 0, 1, radians(90), false);
+  opc.ledStrip(WEST + 4 * 64, 19, x, centerY + (64+64)/2 + 3, 1, radians(90), false);
 
   x = centerX + halfSize;
-  opc.ledStrip(EAST + 3 * 64, 64, x, centerY + (64+19)/2 + 3, 1, radians(270), false);
-  opc.ledStrip(EAST + 4 * 64, 64, x, centerY - (64-19)/2 - 0, 1, radians(270), false);
-  opc.ledStrip(EAST + 5 * 64, 19, x, centerY - (64+64)/2 - 3, 1, radians(270), false);
+  opc.ledStrip(EAST + 2 * 64, 64, x, centerY + (64+19)/2 + 3, 1, radians(270), false);
+  opc.ledStrip(EAST + 3 * 64, 64, x, centerY - (64-19)/2 - 0, 1, radians(270), false);
+  opc.ledStrip(EAST + 4 * 64, 19, x, centerY - (64+64)/2 - 3, 1, radians(270), false);
 
   y = centerY - halfSize;
-  opc.ledStrip(NORTH + 3 * 64, 64, centerX + (64+19)/2 + 3, y, 1, radians(180), false);
-  opc.ledStrip(NORTH + 4 * 64, 64, centerX - (64-19)/2 - 0, y, 1, radians(180), false);
-  opc.ledStrip(NORTH + 5 * 64, 19, centerX - (64+64)/2 - 3, y, 1, radians(180), false);
+  opc.ledStrip(NORTH + 2 * 64, 64, centerX + (64+19)/2 + 3, y, 1, radians(180), false);
+  opc.ledStrip(NORTH + 3 * 64, 64, centerX - (64-19)/2 - 0, y, 1, radians(180), false);
+  opc.ledStrip(NORTH + 4 * 64, 19, centerX - (64+64)/2 - 3, y, 1, radians(180), false);
 
   y = centerY + halfSize;
-  opc.ledStrip(SOUTH + 3 * 64, 64, centerX - (64+19)/2 - 3, y, 1, 0, false);
-  opc.ledStrip(SOUTH + 4 * 64, 64, centerX + (64-19)/2 + 0, y, 1, 0, false);
-  opc.ledStrip(SOUTH + 5 * 64, 19, centerX + (64+64)/2 + 3, y, 1, 0, false);
+  opc.ledStrip(SOUTH + 2 * 64, 64, centerX - (64+19)/2 - 3, y, 1, 0, false);
+  opc.ledStrip(SOUTH + 3 * 64, 64, centerX + (64-19)/2 + 0, y, 1, 0, false);
+  opc.ledStrip(SOUTH + 4 * 64, 19, centerX + (64+64)/2 + 3, y, 1, 0, false);
 
   // Third tier
   halfSize = Pyramid.l3Size / 2;
 
   x = centerX - halfSize;
-  opc.ledStrip(WEST + 0 * 64, 64, x, centerY - (64+56)/2 - 3, 1, radians(90), false);
-  opc.ledStrip(WEST + 1 * 64, 64, x, centerY + (64-56)/2 + 0, 1, radians(90), false);
-  opc.ledStrip(WEST + 2 * 64, 56, x, centerY + (64+64)/2 + 3, 1, radians(90), false);
+  opc.ledStrip(WEST + 5 * 64, 64, x, centerY - (64+56)/2 - 3, 1, radians(90), false);
+  opc.ledStrip(WEST + 6 * 64, 64, x, centerY + (64-56)/2 + 0, 1, radians(90), false);
+  opc.ledStrip(WEST + 7 * 64, 56, x, centerY + (64+64)/2 + 3, 1, radians(90), false);
 
   x = centerX + halfSize;
-  opc.ledStrip(EAST + 0 * 64, 64, x, centerY + (64+56)/2 + 3, 1, radians(270), false);
-  opc.ledStrip(EAST + 1 * 64, 64, x, centerY - (64-56)/2 - 0, 1, radians(270), false);
-  opc.ledStrip(EAST + 2 * 64, 56, x, centerY - (64+64)/2 - 3, 1, radians(270), false);
+  opc.ledStrip(EAST + 5 * 64, 64, x, centerY + (64+56)/2 + 3, 1, radians(270), false);
+  opc.ledStrip(EAST + 6 * 64, 64, x, centerY - (64-56)/2 - 0, 1, radians(270), false);
+  opc.ledStrip(EAST + 7 * 64, 56, x, centerY - (64+64)/2 - 3, 1, radians(270), false);
 
   y = centerY - halfSize;
-  opc.ledStrip(NORTH + 0 * 64, 64, centerX + (64+56)/2 + 3, y, 1, radians(180), false);
-  opc.ledStrip(NORTH + 1 * 64, 64, centerX - (64-56)/2 - 0, y, 1, radians(180), false);
-  opc.ledStrip(NORTH + 2 * 64, 56, centerX - (64+64)/2 - 3, y, 1, radians(180), false);
+  opc.ledStrip(NORTH + 5 * 64, 64, centerX + (64+56)/2 + 3, y, 1, radians(180), false);
+  opc.ledStrip(NORTH + 6 * 64, 64, centerX - (64-56)/2 - 0, y, 1, radians(180), false);
+  opc.ledStrip(NORTH + 7 * 64, 56, centerX - (64+64)/2 - 3, y, 1, radians(180), false);
 
   y = centerY + halfSize;
-  opc.ledStrip(SOUTH + 0 * 64, 64, centerX - (64+56)/2 - 3, y, 1, 0, false);
-  opc.ledStrip(SOUTH + 1 * 64, 64, centerX + (64-56)/2 + 0, y, 1, 0, false);
-  opc.ledStrip(SOUTH + 2 * 64, 56, centerX + (64+64)/2 + 3, y, 1, 0, false);
+  opc.ledStrip(SOUTH + 5 * 64, 64, centerX - (64+56)/2 - 3, y, 1, 0, false);
+  opc.ledStrip(SOUTH + 6 * 64, 64, centerX + (64-56)/2 + 0, y, 1, 0, false);
+  opc.ledStrip(SOUTH + 7 * 64, 56, centerX + (64+64)/2 + 3, y, 1, 0, false);
 
 }
 
