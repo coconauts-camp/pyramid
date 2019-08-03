@@ -1,5 +1,5 @@
-class PyramidEffect {
+abstract class PyramidEffect implements Effect {
   void setup(PApplet parent) { }
-  void reset(PApplet parent) { }
-  void draw(boolean onBeat) { }
+  void reset(PGraphics g) { }
+  abstract void draw(PGraphics g);
 }

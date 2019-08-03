@@ -1,19 +1,30 @@
 abstract class SpinImageEffect extends PyramidEffect {
-  int rpm = 60;
-  PGraphics im;
+  int rpm;
+  PImage im;
 
-  void reset(PApplet parent) {
-    if (im == null) im = createImage();
-    imageMode(CENTER);
+  SpinImageEffect() {
+    this(60);
   }
 
-  abstract PGraphics createImage();
+  SpinImageEffect(int rpm) {
+    this.rpm = rpm;
+  }
 
-  void draw(boolean onBeat) {
+  void setup(PApplet parent) {
+    if (im == null) im = createImage(parent);
+  }
+
+  void reset(PGraphics g) {
+    g.imageMode(CENTER);
+  }
+
+  abstract PImage createImage(PApplet parent);
+
+  void draw(PGraphics g) {
     final float rotationAngle = TWO_PI * rpm * millis() / 60000;
-    translate(width/2, height/2);
-    rotate(rotationAngle);
-    image(im, 0, 0);
+    g.translate(width/2, height/2);
+    g.rotate(rotationAngle);
+    g.image(im, 0, 0);
   }
 }
 
@@ -25,24 +36,24 @@ abstract class Wheel {
   }
 
   abstract void getColor(float rad, CRGB rgb);
-  void setup(PGraphics pg) {
-    pg.colorMode(RGB, 255);
+  void setup(PGraphics g) {
+    g.colorMode(RGB, 255);
   }
 
-  PGraphics createImage() {
+  PImage createImage(PApplet parent) {
     CRGB rgb = new CRGB();
-    PGraphics pg = createGraphics(width, height);
-    pg.beginDraw();
-    setup(pg);
-    pg.translate(width/2, height/2);
+    PGraphics g = parent.createGraphics(width, height);
+    g.beginDraw();
+    setup(g);
+    g.translate(width/2, height/2);
 
     for (float rad = 0; rad < TWO_PI; rad += sliceSize) {
       getColor(rad, rgb);
-      pg.fill(rgb.r, rgb.g, rgb.b);
-      pg.arc(0, 0, width, width, rad, rad + sliceSize);
+      g.fill(rgb.r, rgb.g, rgb.b);
+      g.arc(0, 0, width, width, rad, rad + sliceSize);
     }
-    pg.endDraw();
-    return pg;
+    g.endDraw();
+    return g;
   }
 }
 
@@ -51,7 +62,7 @@ class RGBColorwheelEffect extends SpinImageEffect {
     rpm = 60;
   }
 
-  PGraphics createImage() {
+  PImage createImage(PApplet parent) {
     return (new Wheel(2 * width + 2 * height) {
       public void getColor(float rad, CRGB rgb) {
         rgb.r = (int) (rad * 256/TWO_PI);
@@ -59,40 +70,48 @@ class RGBColorwheelEffect extends SpinImageEffect {
         rgb.g = (int) (256 - Math.abs((rad - 2 * TWO_PI / 3)) * 3 * 256/TWO_PI);
         rgb.b = (int) (256 - Math.min(Math.abs(rad), Math.abs(rad - TWO_PI)) * 3 * 256/TWO_PI);
       }
-    }).createImage();
+    }).createImage(parent);
   }
 }
 
 class HSB1ColorwheelEffect extends SpinImageEffect {
-  void setup(PApplet parent) {
-    rpm = 60;
+  HSB1ColorwheelEffect() {
+    this(60);
   }
 
-  PGraphics createImage() {
-    return (new Wheel(2 * width + 2 * height) {
-      public void setup(PGraphics pg) {
-        pg.colorMode(HSB, 255, 100, 100, 100);
+  HSB1ColorwheelEffect(int rpm) {
+    this.rpm = rpm;
+  }
+
+  PImage createImage(PApplet parent) {
+    return (new Wheel(2 * parent.width + 2 * parent.height) {
+      public void setup(PGraphics g) {
+        g.colorMode(HSB, 255, 100, 100, 100);
       }
       public void getColor(float rad, CRGB rgb) {
         rgb.r = (int) (rad * 256/TWO_PI);
         rgb.g = 100;
         rgb.b = 75;
       }
-    }).createImage();
+    }).createImage(parent);
   }
 }
 
 // Uses different (better?) HSV space from https://github.com/FastLED/FastLED/wiki/FastLED-HSV-Colors
 class HSB2ColorwheelEffect extends SpinImageEffect {
-  void setup(PApplet parent) {
-    rpm = 60;
+  HSB2ColorwheelEffect() {
+    this(60);
   }
 
-  PGraphics createImage() {
-    return (new Wheel(2 * width + 2 * height) {
+  HSB2ColorwheelEffect(int rpm) {
+    this.rpm = rpm;
+  }
+
+  PImage createImage(PApplet parent) {
+    return (new Wheel(2 * parent.width + 2 * parent.height) {
       public void getColor(float rad, CRGB rgb) {
         hsv2rgb_rainbow((int) (rad * 256/TWO_PI), 255, 255, rgb);
       }
-    }).createImage();
+    }).createImage(parent);
   }
 }

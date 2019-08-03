@@ -8,6 +8,7 @@ float[] spectrum = new float[bands];
 
 void setupAudio(PApplet parent) {
   amplitude = new Amplitude(parent);
+  // Grab audio in from soundcard (microphone)
   in = new AudioIn(parent, 0);
   in.start();
   amplitude.input(in);
@@ -60,17 +61,18 @@ class SoundBarEffect extends PyramidEffect {
     soundBarPrevLevels = new float[SOUND_BAR_HISTORY];
   }
 
-  void reset(PApplet parent) {
-    colorMode(HSB, 255);
+  void reset(PGraphics g) {
+    g.noStroke();
+    g.colorMode(HSB, 255);
     for (int i = 0; i < soundBarPrevLevels.length; i++) {
       soundBarPrevLevels[i] = 0.0;
     }
   }
 
-  void draw(boolean onBeat) {
+  void draw(PGraphics g) {
     float level = amplitude.analyze();
 
-    background(0, 0);
+    g.background(0, 0);
 
     int spacing = 3;
     int w = width / (SOUND_BAR_HISTORY * spacing);
@@ -87,10 +89,10 @@ class SoundBarEffect extends PyramidEffect {
 
     float hueValue = map(h, minHeight, height, 0, 255);
 
-    fill(hueValue, 255, 255, 255);
+    g.fill(hueValue, 255, 255, 255);
 
-    rect(0, height/2 - h / 2, width, h);
-    rect(width/2 - h / 2, 0, h, width);
+    g.rect(0, height/2 - h / 2, width, h);
+    g.rect(width/2 - h / 2, 0, h, width);
 
     if (recentMax > 0.01 && recentMax < soundBarNormalizedMax / 2) {
       soundBarNormalizedMax *= 0.95;

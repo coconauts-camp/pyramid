@@ -1,14 +1,22 @@
 class HSB1ColorfadeEffect extends PyramidEffect {
   static final int MAX_HUE = 255;
-  int rpm = 60;
+  int rpm;
 
-  void reset(PApplet parent) {
-    colorMode(HSB, 255);
+  HSB1ColorfadeEffect() {
+    this(60);
   }
 
-  void draw(boolean onBeat) {
+  HSB1ColorfadeEffect(int rpm) {
+    this.rpm = rpm;
+  }
+
+  void reset(PGraphics g) {
+    g.colorMode(HSB, 255);
+  }
+
+  void draw(PGraphics g) {
     final int hue = (int) ((((float) MAX_HUE) * rpm * millis() / 60000) % (MAX_HUE + 1));
-    background(hue, 255, 255);
+    g.background(hue, 255, 255);
   }
 }
 
@@ -18,17 +26,25 @@ class HSB2ColorfadeEffect extends PyramidEffect {
   int rpm = 60;
   CRGB rgb;
 
+  HSB2ColorfadeEffect() {
+    this(60);
+  }
+
+  HSB2ColorfadeEffect(int rpm) {
+    this.rpm = rpm;
+  }
+
   void setup(PApplet parent) {
     rgb = new CRGB();
   }
 
-  void reset(PApplet parent) {
-    colorMode(RGB, 255);
+  void reset(PGraphics g) {
+    g.colorMode(RGB, 255);
   }
 
-  void draw(boolean onBeat) {
+  void draw(PGraphics g) {
     final int hue = (int) ((((float) MAX_HUE) * rpm * millis() / 60000) % (MAX_HUE + 1));
     hsv2rgb_rainbow(hue, 255, 255, rgb);
-    background(rgb.r, rgb.g, rgb.b);
+    g.background(rgb.r, rgb.g, rgb.b);
   }
 }
