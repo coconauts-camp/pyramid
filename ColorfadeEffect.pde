@@ -3,7 +3,7 @@ class HSB1ColorfadeEffect extends PyramidEffect {
   int rpm;
 
   HSB1ColorfadeEffect() {
-    this(60);
+    this(20);
   }
 
   HSB1ColorfadeEffect(int rpm) {
@@ -27,7 +27,7 @@ class HSB2ColorfadeEffect extends PyramidEffect {
   CRGB rgb;
 
   HSB2ColorfadeEffect() {
-    this(60);
+    this(20);
   }
 
   HSB2ColorfadeEffect(int rpm) {

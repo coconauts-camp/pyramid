@@ -3,7 +3,7 @@ abstract class SpinImageEffect extends PyramidEffect {
   PImage im;
 
   SpinImageEffect() {
-    this(60);
+    this(20);
   }
 
   SpinImageEffect(int rpm) {
@@ -58,8 +58,12 @@ abstract class Wheel {
 }
 
 class RGBColorwheelEffect extends SpinImageEffect {
-  void setup(PApplet parent) {
-    rpm = 60;
+  RGBColorwheelEffect() {
+    this(20);
+  }
+
+  RGBColorwheelEffect(int rpm) {
+    this.rpm = rpm;
   }
 
   PImage createImage(PApplet parent) {
@@ -76,7 +80,7 @@ class RGBColorwheelEffect extends SpinImageEffect {
 
 class HSB1ColorwheelEffect extends SpinImageEffect {
   HSB1ColorwheelEffect() {
-    this(60);
+    this(20);
   }
 
   HSB1ColorwheelEffect(int rpm) {
@@ -100,7 +104,7 @@ class HSB1ColorwheelEffect extends SpinImageEffect {
 // Uses different (better?) HSV space from https://github.com/FastLED/FastLED/wiki/FastLED-HSV-Colors
 class HSB2ColorwheelEffect extends SpinImageEffect {
   HSB2ColorwheelEffect() {
-    this(60);
+    this(20);
   }
 
   HSB2ColorwheelEffect(int rpm) {
