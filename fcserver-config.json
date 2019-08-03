@@ -15,15 +15,51 @@
   "devices": [
     {
       "type": "fadecandy",
-      "serial": "OAIREQHPAOLIWUNZ"
+      "serial": "OAIREQHPAOLIWUNZ",
+      "map": [
+        [
+          0,
+          512,
+          0,
+          512
+        ]
+      ]
     },
     {
       "type": "fadecandy",
-      "serial": "XFFMNXEKGEVQSQXP"
+      "serial": "XFFMNXEKGEVQSQXP",
+      "map": [
+        [
+          0,
+          1024,
+          0,
+          512
+        ]
+      ]
     },
     {
       "type": "fadecandy",
-      "serial": "EQSBWWGAGERGEODF"
+      "serial": "EQSBWWGAGERGEODF",
+      "map": [
+        [
+          0,
+          1536,
+          0,
+          512
+        ]
+      ]
+    },
+    {
+      "type": "fadecandy",
+      "serial": "XHBYPJGCGCTUEWLN",
+      "map": [
+        [
+          0,
+          0,
+          0,
+          512
+        ]
+      ]
     }
   ]
 }
