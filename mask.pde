@@ -47,23 +47,23 @@ static class Masks {
         halfX + y * halfX, halfY - x * halfY
       );
       g.fill(0,0,0,0);
-      g.rect(halfX, halfY, Pyramid.l1Size - 12, Pyramid.l1Size - 12);
+      int levelASize = Pyramid.levelLedsWidth[0];
+      g.rect(halfX, halfY, levelASize - 12, levelASize - 12);
     }}).createMask(parent);
   }
 
   static void setup(PApplet parent) {
     if (levelMasks != null) return;
-    levelMasks = new PImage[] {
-      createLevelMask(parent, Pyramid.l1Size), // A
-      createLevelMask(parent, Pyramid.l2Size), // B
-      createLevelMask(parent, Pyramid.l3Size), // C
-    };
-    sideMasks = new PImage[] {
-      createSideMask(parent, 1, -1),  // N
-      createSideMask(parent, 1, 1),   // E
-      createSideMask(parent, -1, 1),  // S
-      createSideMask(parent, -1, -1), // W
-    };
+    levelMasks = new PImage[Pyramid.levelLedsWidth.length];
+    for (int i = 0; i < levelMasks.length; i++) {
+      int width = Pyramid.levelLedsWidth[i];
+      levelMasks[i] = createLevelMask(parent, width);
+    }
+    sideMasks = new PImage[Pyramid.ledStartSigns.length];
+    for (int i = 0; i < sideMasks.length; i++) {
+      int[] ss = Pyramid.ledStartSigns[i];
+      sideMasks[i] = createSideMask(parent, ss[0], ss[1]);
+    }
   }
 }
 

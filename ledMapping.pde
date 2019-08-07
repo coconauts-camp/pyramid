@@ -2,34 +2,96 @@ OPC opc;
 
 static final float pixelMeterRatio = 60.0; // # of pixels/m for lightstrips
 
-class Pyramid {
-  static final float l1Size = 1.83 * pixelMeterRatio; //  6'
-  static final float l2Size = 2.44 * pixelMeterRatio; //  8'
-  static final float l3Size = 3.05 * pixelMeterRatio; // 10'
+static class Pyramid {
+  static final int[] levelLedsWidth = {
+    64 + 46,          // A
+    64 + 64 + 19 + 1, // B +1 phantom led to make an even number
+    64 + 64 + 56,     // C
+  };
+
+  static final int[][] ledStartSigns = {
+    { 1, -1, 180}, // N x, y, strip direction (degrees)
+    { 1,  1, 270}, // E
+    {-1,  1,   0}, // S
+    {-1, -1,  90}, // W
+  };
 }
 
-class Mo {
+//      ______           ____
+//     /      \         /    \
+//    /  *  *  \       /      \
+//  _/__________\_   _/_______ \
+// |              | |           \
+// |______________| |____________\
+static class Mo {
   static final float baseWidth = 1.32 * pixelMeterRatio; // 4'4"
-  static final float baselength = .99 * pixelMeterRatio; // 3'3"
-  static final float height = 1.83 * pixelMeterRatio; //    6'
+  static final float baseDepth = 0.99 * pixelMeterRatio; // 3'3"
+  static final float topWidth  = 0.91 * pixelMeterRatio; // 3'
+  static final float topDepth  = 0.53 * pixelMeterRatio; // 1'9"
+  static final float height    = 1.83 * pixelMeterRatio; // 6'
+  static final float eyeDist   = 0.61 * pixelMeterRatio; // 2' center to center
 
-  static final int moSize = 70;
-  // Mo Eyes
-  static final float eyeDist = 0.7;
-  static final float eyeOffsetSideways = (eyeDist / 2) * moSize / 1.4142; // sqrt(2) since we're putting Mo at an angle
-  static final float eyeOffsetForwards = 10.0;
-  // Assuming Mo faces NE (I think N is the best painted side)
+  // Set the location of Mo's LEDs.
+  // angle is in radians, measured clockwise from +x.
+  // (x,y) is the center of Mo.
+  static void placeLeds(OPC opc, int index, float x, float y, float angle) {
+    // Mo eyes
+    float eyeX = topDepth / 2;
+    float eyeY = eyeDist / 2;
+    // as if at the origin facing +X (E)
+    Point e1 = Point.create(eyeX,  eyeY);
+    Point e2 = Point.create(eyeX, -eyeY);
+    // now rotate to correct angle
+    rotatePoint(e1, angle);
+    rotatePoint(e2, angle);
+    opc.ledGrid8x8(index + 0 * 64, x + e1.x, y + e1.y, 1, angle, false, false);
+    opc.ledGrid8x8(index + 1 * 64, x + e2.x, y + e2.y, 1, angle, false, false);
+
+    // Mo up light
+    float halfWidth = baseWidth / 2;
+    float halfDepth = baseDepth / 2;
+    // as if at the origin facing +X (E)
+    Point u1 = Point.create(halfWidth,  halfDepth);
+    Point u2 = Point.create(halfWidth, -halfDepth);
+    // now rotate to correct angle
+    rotatePoint(u1, angle);
+    rotatePoint(u2, angle);
+    print("uxy ", x + u1.x, " ", y + u1.y, " ", x + u2.x, " ", y + u2.y, "\n");
+    ledStripByEndpoints(opc, index + 2 * 64, 64, x + u1.x, y + u1.y, x + u2.x, y + u2.y, false);
+
+  }
+
+}
+
+// Set the location of several LEDs arranged in a strip.
+// (x1,y1) is start, x2, y2 is the end.
+static void ledStripByEndpoints(OPC opc, int index, int count, float x1, float y1, float x2, float y2, boolean reversed)
+{
+  float dx = (x2 - x1) / count;
+  float dy = (y2 - y1) / count;
+  for (int i = 0; i < count; i++) {
+    opc.led(reversed ? (index + count - 1 - i) : (index + i),
+      (int)(x1 + dx * i + 0.5),
+      (int)(y1 + dy * i + 0.5));
+  }
 }
 
 void setupLedMapping(PApplet parent) {
   opc = new OPC(parent, "127.0.0.1", 7890);
 
-  float moEyeSpacing = 2; // place every other pixel
+  int[] sideStartLed = {
+    512 * 0, // N
+    512 * 1, // E
+    512 * 2, // S
+    512 * 3, // W
+  };
 
-  int NORTH = 512 * 0;
-  int EAST = 512 * 1;
-  int SOUTH = 512 * 2;
-  int WEST = 512 * 3;
+  int[] levelStartLedOffest = {
+    64 * 0, // A
+    64 * 2, // B
+    64 * 5, // C
+  };
+
   int SPECIAL = 512 * 4;
 
   float centerX = width / 2;
@@ -38,12 +100,7 @@ void setupLedMapping(PApplet parent) {
   float y = 0;
   float halfSize = 0;
 
-  opc.ledGrid8x8(SPECIAL + 0 * 64, centerX - Mo.eyeOffsetSideways + Mo.eyeOffsetForwards, centerY - Mo.eyeOffsetSideways - Mo.eyeOffsetForwards, moEyeSpacing, radians(45), false, false);
-  opc.ledGrid8x8(SPECIAL + 1 * 64, centerX + Mo.eyeOffsetSideways + Mo.eyeOffsetForwards, centerY + Mo.eyeOffsetSideways - Mo.eyeOffsetForwards, moEyeSpacing, radians(45), false, false);
-
-  // Mo Light Up
-  opc.ledStrip(SPECIAL + 2 * 64 +  0, 32, centerX + (46 + 32) / 2, centerY - (46) / 2, 1, radians(270), false);
-  opc.ledStrip(SPECIAL + 2 * 64 + 32, 32, centerX + (46) / 2, centerY - (46 + 32) / 2, 1, radians(180), false);
+  Mo.placeLeds(opc, SPECIAL, centerX, centerY, radians(225));
 
   // Level orientation
   // "arrow" is strip direction
@@ -58,70 +115,19 @@ void setupLedMapping(PApplet parent) {
   //         +-->--+
   //            S
 
-  // Top tier
-  halfSize = Pyramid.l1Size / 2;
-
-  x = centerX - halfSize;
-  opc.ledStrip(WEST  + 6 * 64, 64, x, centerY - 46/2 - 1.5, 1, radians(90), false);
-  opc.ledStrip(WEST  + 7 * 64, 46, x, centerY + 64/2 + 1.5, 1, radians(90), false);
-
-  x = centerX + halfSize;
-  opc.ledStrip(EAST  + 0 * 64, 64, x, centerY + 46/2 + 1.5, 1, radians(270), false);
-  opc.ledStrip(EAST  + 1 * 64, 46, x, centerY - 64/2 - 1.5, 1, radians(270), false);
-
-  y = centerY - halfSize;
-  opc.ledStrip(NORTH + 0 * 64, 64, centerX + 46/2 + 1.5, y, 1, radians(180), false);
-  opc.ledStrip(NORTH + 1 * 64, 46, centerX - 64/2 - 1.5, y, 1, radians(180), false);
-
-  y = centerY + halfSize;
-  opc.ledStrip(SOUTH + 0 * 64, 64, centerX - 46/2 - 1.5, y, 1, 0, false);
-  opc.ledStrip(SOUTH + 1 * 64, 46, centerX + 64/2 + 1.5, y, 1, 0, false);
-
-  // Second tier
-  halfSize = Pyramid.l2Size / 2;
-
-  x = centerX - halfSize;
-  opc.ledStrip(WEST + 2 * 64, 64, x, centerY - (64+19)/2 - 3, 1, radians(90), false);
-  opc.ledStrip(WEST + 3 * 64, 64, x, centerY + (64-19)/2 + 0, 1, radians(90), false);
-  opc.ledStrip(WEST + 4 * 64, 19, x, centerY + (64+64)/2 + 3, 1, radians(90), false);
-
-  x = centerX + halfSize;
-  opc.ledStrip(EAST + 2 * 64, 64, x, centerY + (64+19)/2 + 3, 1, radians(270), false);
-  opc.ledStrip(EAST + 3 * 64, 64, x, centerY - (64-19)/2 - 0, 1, radians(270), false);
-  opc.ledStrip(EAST + 4 * 64, 19, x, centerY - (64+64)/2 - 3, 1, radians(270), false);
-
-  y = centerY - halfSize;
-  opc.ledStrip(NORTH + 2 * 64, 64, centerX + (64+19)/2 + 3, y, 1, radians(180), false);
-  opc.ledStrip(NORTH + 3 * 64, 64, centerX - (64-19)/2 - 0, y, 1, radians(180), false);
-  opc.ledStrip(NORTH + 4 * 64, 19, centerX - (64+64)/2 - 3, y, 1, radians(180), false);
-
-  y = centerY + halfSize;
-  opc.ledStrip(SOUTH + 2 * 64, 64, centerX - (64+19)/2 - 3, y, 1, 0, false);
-  opc.ledStrip(SOUTH + 3 * 64, 64, centerX + (64-19)/2 + 0, y, 1, 0, false);
-  opc.ledStrip(SOUTH + 4 * 64, 19, centerX + (64+64)/2 + 3, y, 1, 0, false);
-
-  // Third tier
-  halfSize = Pyramid.l3Size / 2;
-
-  x = centerX - halfSize;
-  opc.ledStrip(WEST + 5 * 64, 64, x, centerY - (64+56)/2 - 3, 1, radians(90), false);
-  opc.ledStrip(WEST + 6 * 64, 64, x, centerY + (64-56)/2 + 0, 1, radians(90), false);
-  opc.ledStrip(WEST + 7 * 64, 56, x, centerY + (64+64)/2 + 3, 1, radians(90), false);
-
-  x = centerX + halfSize;
-  opc.ledStrip(EAST + 5 * 64, 64, x, centerY + (64+56)/2 + 3, 1, radians(270), false);
-  opc.ledStrip(EAST + 6 * 64, 64, x, centerY - (64-56)/2 - 0, 1, radians(270), false);
-  opc.ledStrip(EAST + 7 * 64, 56, x, centerY - (64+64)/2 - 3, 1, radians(270), false);
-
-  y = centerY - halfSize;
-  opc.ledStrip(NORTH + 5 * 64, 64, centerX + (64+56)/2 + 3, y, 1, radians(180), false);
-  opc.ledStrip(NORTH + 6 * 64, 64, centerX - (64-56)/2 - 0, y, 1, radians(180), false);
-  opc.ledStrip(NORTH + 7 * 64, 56, centerX - (64+64)/2 - 3, y, 1, radians(180), false);
-
-  y = centerY + halfSize;
-  opc.ledStrip(SOUTH + 5 * 64, 64, centerX - (64+56)/2 - 3, y, 1, 0, false);
-  opc.ledStrip(SOUTH + 6 * 64, 64, centerX + (64-56)/2 + 0, y, 1, 0, false);
-  opc.ledStrip(SOUTH + 7 * 64, 56, centerX + (64+64)/2 + 3, y, 1, 0, false);
-
+  // levels
+  for (int i = 0; i < sideStartLed.length; i++) {
+    for (int j = 0; j < Pyramid.levelLedsWidth.length; j++) {
+      int[] ss = Pyramid.ledStartSigns[i];
+      int ledsWidth = Pyramid.levelLedsWidth[j];
+      float halfLedsWidth = ledsWidth / 2.0;
+      int stripStartLed = sideStartLed[i] + levelStartLedOffest[j];
+      float x1 = centerX + ss[0] * halfLedsWidth;
+      float y1 = centerY + ss[1] * halfLedsWidth;
+      float x2 = centerX + ss[1] * halfLedsWidth;
+      float y2 = centerY - ss[0] * halfLedsWidth;
+      ledStripByEndpoints(opc, stripStartLed, ledsWidth, x1, y1, x2, y2, false);
+    }
+  }
 }
 
