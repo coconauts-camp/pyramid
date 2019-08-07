@@ -1,3 +1,7 @@
+class CRGB {
+  int r,g,b;
+}
+
 abstract class SpinImageEffect extends PyramidEffect {
   int rpm;
   PImage im;
@@ -69,7 +73,6 @@ class RGBColorwheelEffect extends SpinImageEffect {
   PImage createImage(PApplet parent) {
     return (new Wheel(2 * width + 2 * height) {
       public void getColor(float rad, CRGB rgb) {
-        rgb.r = (int) (rad * 256/TWO_PI);
         rgb.r = (int) (256 - Math.abs((rad - 1 * TWO_PI / 3)) * 3 * 256/TWO_PI);
         rgb.g = (int) (256 - Math.abs((rad - 2 * TWO_PI / 3)) * 3 * 256/TWO_PI);
         rgb.b = (int) (256 - Math.min(Math.abs(rad), Math.abs(rad - TWO_PI)) * 3 * 256/TWO_PI);
@@ -78,12 +81,12 @@ class RGBColorwheelEffect extends SpinImageEffect {
   }
 }
 
-class HSB1ColorwheelEffect extends SpinImageEffect {
-  HSB1ColorwheelEffect() {
+class HSBColorwheelEffect extends SpinImageEffect {
+  HSBColorwheelEffect() {
     this(20);
   }
 
-  HSB1ColorwheelEffect(int rpm) {
+  HSBColorwheelEffect(int rpm) {
     this.rpm = rpm;
   }
 
@@ -96,25 +99,6 @@ class HSB1ColorwheelEffect extends SpinImageEffect {
         rgb.r = (int) (rad * 256/TWO_PI);
         rgb.g = 100;
         rgb.b = 75;
-      }
-    }).createImage(parent);
-  }
-}
-
-// Uses different (better?) HSV space from https://github.com/FastLED/FastLED/wiki/FastLED-HSV-Colors
-class HSB2ColorwheelEffect extends SpinImageEffect {
-  HSB2ColorwheelEffect() {
-    this(20);
-  }
-
-  HSB2ColorwheelEffect(int rpm) {
-    this.rpm = rpm;
-  }
-
-  PImage createImage(PApplet parent) {
-    return (new Wheel(2 * parent.width + 2 * parent.height) {
-      public void getColor(float rad, CRGB rgb) {
-        hsv2rgb_rainbow((int) (rad * 256/TWO_PI), 255, 255, rgb);
       }
     }).createImage(parent);
   }

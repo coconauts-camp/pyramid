@@ -102,6 +102,7 @@ class MaskEffectsEffect extends PyramidEffect {
       if (e == null) continue;
       e.reset(gs[i]);
     }
+    g.imageMode(CORNER);
   }
 
   void drawMaskedEffect(PGraphics g, PyramidEffect e, PImage mask) {

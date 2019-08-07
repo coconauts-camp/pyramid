@@ -4,39 +4,37 @@ PyramidEffect[] effects;
 
 void setupEffects(PApplet parent) {
   effects = new PyramidEffect[] {
-    // new HSB1ColorwheelEffect(),
-    // new HSB2ColorwheelEffect(),
-    // new RGBColorwheelEffect(),
-    // new HSB1ColorfadeEffect(),
-    // new HSB2ColorfadeEffect(),
+    new HSBColorwheelEffect(),
+    new RGBColorwheelEffect(),
+    new HSBColorfadeEffect(),
     // new SoundBarEffect(),
     // new MaskLevelEffect(new PyramidEffect[] {
-    //   new HSB2ColorwheelEffect(),
-    //   new HSB2ColorfadeEffect(),
+    //   new HSBColorwheelEffect(),
+    //   new HSBColorfadeEffect(),
     //   new SoundBarEffect(),
     // }),
-    new MaskSideEffect(new PyramidEffect[] {
-      new MaskLevelEffect(new PyramidEffect[] {
-        new HSB2ColorwheelEffect(),
-        new HSB2ColorfadeEffect(),
-        new SoundBarEffect(),
-      }),
-      new MaskLevelEffect(new PyramidEffect[] {
-        new HSB2ColorfadeEffect(),
-        new SoundBarEffect(),
-        new HSB2ColorwheelEffect(),
-      }),
-      new MaskLevelEffect(new PyramidEffect[] {
-        new SoundBarEffect(),
-        new HSB2ColorwheelEffect(),
-        new HSB2ColorfadeEffect(),
-      }),
-      new MaskLevelEffect(new PyramidEffect[] {
-        new HSB2ColorfadeEffect(-60),
-        new HSB2ColorwheelEffect(-60),
-        new HSB2ColorfadeEffect(-60),
-      }),
-    }),
+    // new MaskSideEffect(new PyramidEffect[] {
+    //   new MaskLevelEffect(new PyramidEffect[] {
+    //     new HSBColorwheelEffect(),
+    //     new HSBColorfadeEffect(),
+    //     new SoundBarEffect(),
+    //   }),
+    //   new MaskLevelEffect(new PyramidEffect[] {
+    //     new HSBColorfadeEffect(),
+    //     new SoundBarEffect(),
+    //     new HSBColorwheelEffect(),
+    //   }),
+    //   new MaskLevelEffect(new PyramidEffect[] {
+    //     new SoundBarEffect(),
+    //     new HSBColorwheelEffect(),
+    //     new HSBColorfadeEffect(),
+    //   }),
+    //   new MaskLevelEffect(new PyramidEffect[] {
+    //     new HSBColorfadeEffect(-60),
+    //     new HSBColorwheelEffect(-60),
+    //     new HSBColorfadeEffect(-60),
+    //   }),
+    // }),
   };
 
   for (PyramidEffect effect: effects) {
