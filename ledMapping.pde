@@ -51,12 +51,11 @@ static class Mo {
     float halfWidth = baseWidth / 2;
     float halfDepth = baseDepth / 2;
     // as if at the origin facing +X (E)
-    Point u1 = Point.create(halfWidth,  halfDepth);
-    Point u2 = Point.create(halfWidth, -halfDepth);
+    Point u1 = Point.create(halfDepth,  halfWidth);
+    Point u2 = Point.create(halfDepth, -halfWidth);
     // now rotate to correct angle
     rotatePoint(u1, angle);
     rotatePoint(u2, angle);
-    print("uxy ", x + u1.x, " ", y + u1.y, " ", x + u2.x, " ", y + u2.y, "\n");
     ledStripByEndpoints(opc, index + 2 * 64, 64, x + u1.x, y + u1.y, x + u2.x, y + u2.y, false);
 
   }
@@ -100,6 +99,7 @@ void setupLedMapping(PApplet parent) {
   float y = 0;
   float halfSize = 0;
 
+  // Mo faces NW
   Mo.placeLeds(opc, SPECIAL, centerX, centerY, radians(225));
 
   // Level orientation

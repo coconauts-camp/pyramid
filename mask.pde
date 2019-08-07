@@ -35,12 +35,6 @@ static class Masks {
     final float halfX = parent.width/2;
     final float halfY = parent.height/2;
     return (new MaskMaker() { public void draw(PGraphics g) {
-      print("triangle",
-        halfX, halfY,
-        halfX + x * halfX, halfY + y * halfY,
-        halfX + y * halfX, halfY - x * halfY,
-        "\n"
-      );
       g.triangle(
         halfX, halfY,
         halfX + x * halfX, halfY + y * halfY,
