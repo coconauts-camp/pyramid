@@ -10,7 +10,7 @@ class HSBColorfadeEffect extends PyramidEffect {
     this.rpm = rpm;
   }
 
-  void reset(PGraphics g) {
+  void start(PGraphics g) {
     g.colorMode(HSB, 255);
   }
 

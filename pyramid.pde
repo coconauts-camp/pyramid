@@ -67,8 +67,9 @@ void draw() {
   if (millisOfLastEffectChange + MILLIS_PER_EFFECT < millis()) {
     millisOfLastEffectChange = millis();
     effectIndex = (effectIndex + 1) % effects.length;
+    if (currentEffect != null) currentEffect.stop(g);
     currentEffect = effects[effectIndex];
-    currentEffect.reset(g);
+    currentEffect.start(g);
   }
 
   pushMatrix();

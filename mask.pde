@@ -90,11 +90,11 @@ class MaskEffectsEffect extends PyramidEffect {
     }
   }
 
-  void reset(PGraphics g) {
+  void start(PGraphics g) {
     for (int i = 0; i < masks.length; i++) {
       PyramidEffect e = effects[i];
       if (e == null) continue;
-      e.reset(gs[i]);
+      e.start(gs[i]);
     }
     g.imageMode(CORNER);
   }

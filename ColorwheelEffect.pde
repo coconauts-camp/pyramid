@@ -18,7 +18,7 @@ abstract class SpinImageEffect extends PyramidEffect {
     if (im == null) im = createImage(parent);
   }
 
-  void reset(PGraphics g) {
+  void start(PGraphics g) {
     g.imageMode(CENTER);
   }
 

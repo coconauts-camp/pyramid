@@ -61,7 +61,7 @@ class SoundBarEffect extends PyramidEffect {
     soundBarPrevLevels = new float[SOUND_BAR_HISTORY];
   }
 
-  void reset(PGraphics g) {
+  void start(PGraphics g) {
     g.noStroke();
     g.colorMode(HSB, 255);
     for (int i = 0; i < soundBarPrevLevels.length; i++) {
