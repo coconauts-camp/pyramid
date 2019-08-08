@@ -98,7 +98,7 @@ class HSBColorwheelEffect extends SpinImageEffect {
       public void getColor(float rad, CRGB rgb) {
         rgb.r = (int) (rad * 256/TWO_PI);
         rgb.g = 100;
-        rgb.b = 75;
+        rgb.b = 100;
       }
     }).createImage(parent);
   }
