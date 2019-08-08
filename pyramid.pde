@@ -58,18 +58,21 @@ void setup() {
   setupEffects(this);
 }
 
-int MILLIS_PER_EFFECT = 15 * 1000;
+int MAX_DURATION = 30 * 1000;
 int effectIndex = -1;
 PyramidEffect currentEffect;
-int millisOfLastEffectChange = -1 - MILLIS_PER_EFFECT;
+int currentDuration = 0;
+int millisOfLastEffectChange = -1;
 
 void draw() {
-  if (millisOfLastEffectChange + MILLIS_PER_EFFECT < millis()) {
+  if (millisOfLastEffectChange + currentDuration < millis()) {
     millisOfLastEffectChange = millis();
     effectIndex = (effectIndex + 1) % effects.length;
     if (currentEffect != null) currentEffect.stop(g);
     currentEffect = effects[effectIndex];
     currentEffect.start(g);
+    currentDuration = currentEffect.duration();
+    if (currentDuration > MAX_DURATION) currentDuration = MAX_DURATION;
   }
 
   pushMatrix();
