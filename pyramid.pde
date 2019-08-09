@@ -8,6 +8,8 @@ void setupEffects(PApplet parent) {
     new RGBColorwheelEffect(),
     new HSBColorfadeEffect(),
     // new SoundBarEffect(),
+    // new MovieEffect("Fractal-zoom-1-15-rupture.ogv", 17000),
+    // new MovieEffect("Plasma_globe_360p.webm"),
     // new MaskLevelEffect(new PyramidEffect[] {
     //   new HSBColorwheelEffect(),
     //   new HSBColorfadeEffect(),
@@ -65,6 +67,7 @@ int currentDuration = 0;
 int millisOfLastEffectChange = -1;
 
 void draw() {
+  if (effects.length == 0) throw new RuntimeException("No effects found");
   if (millisOfLastEffectChange + currentDuration < millis()) {
     millisOfLastEffectChange = millis();
     effectIndex = (effectIndex + 1) % effects.length;

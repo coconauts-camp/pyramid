@@ -8,13 +8,25 @@ class MovieEffect extends PyramidEffect {
   int resizeHeight;
   PImage currentFrame;
   int duration; // milliseconds
+  int startAt;
+  int endAt;
 
   MovieEffect(String filename) {
+    this(filename, 0);
+  }
+
+  MovieEffect(String filename, int startAt) {
+    this(filename, startAt, -1);
+  }
+
+  MovieEffect(String filename, int startAt, int endAt) {
     this.filename = filename;
+    this.startAt = startAt;
+    this.endAt = endAt;
   }
 
   int duration() {
-    return duration;
+    return endAt - startAt;
   }
 
   void setup(PApplet parent) {
@@ -22,13 +34,20 @@ class MovieEffect extends PyramidEffect {
     m.noLoop();
     m.play();
     m.volume(0);
+
     duration = (int) (m.duration() * 1000);
+    if (endAt > duration || endAt < 0) endAt = duration;
+    if (startAt < 0) startAt = 0;
+    if (startAt > duration) startAt = duration;
+    if (startAt > endAt) endAt = startAt;
+
     m.stop();
   }
 
   void start(PGraphics g) {
     g.imageMode(CENTER);
     m.play();
+    m.jump(startAt / 1000.0);
   }
 
   void stop(PGraphics g) {
