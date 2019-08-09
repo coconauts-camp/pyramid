@@ -1,3 +1,23 @@
 From http://fractaljourney.blogspot.com/2008/08/mandelbrot-ultra-zoom-2.html and http://www.mediafire.com/?tcyyjybctp4
 By Orson Wang https://www.blogger.com/profile/03336013668591821868
 Licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. http://creativecommons.org/licenses/by-nc-sa/3.0/
+
+The final zoom location is:
+Mandelbrot
+real=-1.9272090522
+0160524854
+8683022726
+6648919007
+8978777279
+5578090286
+8398122533
+5
+img=5.7603733586
+1494214094
+3702029698
+1997525561
+6580550586
+9379592335
+2630065555
+55e-6
+magn=3.1402835E62
