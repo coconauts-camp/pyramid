@@ -17,6 +17,8 @@ else
   echo "No internet: not updating" >> ~/pyramid.log
 fi
 
+# Make sure fcserver is running
 ~/fadecandy/bin/fcserver-rpi ~/pyramid/fcserver-config.json >> ~/fcserver.log 2>&1 &
 
+echo "Starting Pyramid" >> ~/pyramid.log
 processing-java --sketch=/home/pi/pyramid --output=/home/pi/pyramid/out --force --run >> ~/pyramid.log 2>&1
