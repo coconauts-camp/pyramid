@@ -4,6 +4,7 @@ PyramidEffect[] effects;
 
 void setupEffects(PApplet parent) {
   effects = new PyramidEffect[] {
+    new TestSpinEffect(),
     new HSBColorwheelEffect(),
     new RGBColorwheelEffect(),
     new HSBColorfadeEffect(),
