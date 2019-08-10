@@ -7,9 +7,9 @@ PyramidEffect[] effects;
 
 void setupEffects(PApplet parent) {
   effects = new PyramidEffect[] {
-    // new TestSpinEffect(),
+    new TestSpinEffect(),
     // new HSBColorwheelEffect(),
-    new RGBColorwheelEffect(),
+    // new RGBColorwheelEffect(),
     // new HSBColorfadeEffect(),
     // new SoundBarEffect(),
     // new ZoomImageEffect(loadImage("mandelbrot_bioluminescence.png")),

@@ -1,6 +1,6 @@
 class TestSpinEffect extends SpinImageEffect {
   TestSpinEffect() {
-    this(-20);
+    this(-2);
   }
 
   TestSpinEffect(int rpm) {
