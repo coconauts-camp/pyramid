@@ -14,4 +14,4 @@ fi
 
 ~/fadecandy/bin/fcserver-rpi ~/pyramid/fcserver-config.json >> ~/fcserver.log 2>&1 &
 
-processing-java --sketch=/home/pi/pyramid --output=/home/pi/pyramid/out --force --run >> ~/pyramid.log 2>&1 &
+processing-java --sketch=/home/pi/pyramid --output=/home/pi/pyramid/out --force --run >> ~/pyramid.log 2>&1
