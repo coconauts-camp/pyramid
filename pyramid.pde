@@ -7,7 +7,7 @@ void setupEffects(PApplet parent) {
     new HSBColorwheelEffect(),
     new RGBColorwheelEffect(),
     new HSBColorfadeEffect(),
-    // new SoundBarEffect(),
+    new SoundBarEffect(),
     // new MovieEffect("Fractal-zoom-1-15-rupture.ogv", 17000),
     // new MovieEffect("Plasma_globe_360p.webm"),
     // new MaskLevelEffect(new PyramidEffect[] {
