@@ -1,11 +1,16 @@
+#!/bin/sh
 
 vncserver -kill :1
+sleep 1
+
 vncserver :1
+sleep 1
+
 export DISPLAY=:1
 
 wget --spider --quiet http://google.com
 if [ "$?" -eq 0 ]; then
-  echo "Internet: updating" >> ~/pyramid.log
+  echo "Internet found: updating" >> ~/pyramid.log
   cd ~/pyramid
   git pull >> ~/pyramid.log 2>&1
 else
