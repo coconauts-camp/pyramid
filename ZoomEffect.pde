@@ -45,7 +45,6 @@ class ZoomImageEffect extends PyramidEffect {
   void draw(PGraphics g) {
     updateDimensions(g);
     final double zoom = Math.pow(maxZoom, ((double) millis() - startMillis) / duration);
-    print("zoom ", zoom, " millis ", millis(), " startMillis ", startMillis, " duration ", duration, "\n");
     g.image(im, g.width/2, g.height/2, (float) (resizeWidth * zoom), (float) (resizeHeight * zoom));
   }
 }
