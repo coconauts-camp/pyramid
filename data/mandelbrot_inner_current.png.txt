@@ -1,0 +1,12 @@
+From http://fractaljourney.blogspot.com/2007/03/mandelbrot-x-0_18.html
+By Orson Wang https://www.blogger.com/profile/03336013668591821868
+Licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. http://creativecommons.org/licenses/by-nc-sa/3.0/
+
+Mandelbrot
+real=-0.09643799978410350518
+img=0.65303756260469623195
+magn=4.750297E8
+
+---
+Notes from geophree:
+I shaved 1 pixel off the left and 6 off the bottom to center the image.

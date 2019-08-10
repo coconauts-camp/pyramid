@@ -1,0 +1,12 @@
+From http://fractaljourney.blogspot.com/2007/05/saturday-confetti.html
+By Orson Wang https://www.blogger.com/profile/03336013668591821868
+Licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
+Mandelbrot
+real=0.36985520145684649784638183328175683
+img=0.671448251486130101046087310986555484
+magn=5.292084E25
+
+---
+Notes from geophree:
+I shaved 4 pixels off the left and 30 off the top to center the image.
