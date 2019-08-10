@@ -15,6 +15,18 @@
   "devices": [
     {
       "type": "fadecandy",
+      "serial": "XHBYPJGCGCTUEWLN",
+      "map": [
+        [
+          0,
+          0,
+          0,
+          512
+        ]
+      ]
+    },
+    {
+      "type": "fadecandy",
       "serial": "OAIREQHPAOLIWUNZ",
       "map": [
         [
@@ -51,11 +63,11 @@
     },
     {
       "type": "fadecandy",
-      "serial": "XHBYPJGCGCTUEWLN",
+      "serial": "KQZGNDQWFNVCUKHV",
       "map": [
         [
           0,
-          0,
+          2048,
           0,
           512
         ]
