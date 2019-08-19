@@ -8,15 +8,17 @@ PyramidEffect[] effects;
 void setupEffects(PApplet parent) {
   effects = new PyramidEffect[] {
     // new TestSpinEffect(),
-    // new HSBColorwheelEffect(),
+     //new HSBColorwheelEffect(),
     // new RGBColorwheelEffect(),
     // new HSBColorfadeEffect(),
     // new SoundBarEffect(),
-    new ZoomImageEffect(loadImage("mandelbrot_bioluminescence.png")),
-    new ZoomImageEffect(loadImage("mandelbrot_indian_wedding.png")),
-    new ZoomImageEffect(loadImage("mandelbrot_saturday_confetti.png")),
-    new ZoomImageEffect(loadImage("mandelbrot_inner_current.png")),
-    new ZoomImageEffect(loadImage("mandelbrot_coral_swim.png")),
+    //new ZoomImageEffect(loadImage("mandelbrot_bioluminescence.png")),
+    //new ZoomImageEffect(loadImage("mandelbrot_indian_wedding.png")),
+    //new ZoomImageEffect(loadImage("mandelbrot_saturday_confetti.png")),
+    //new ZoomImageEffect(loadImage("mandelbrot_inner_current.png")),
+    //new ZoomImageEffect(loadImage("mandelbrot_coral_swim.png")),
+    //new RippleEffect(width, height),
+    new ColorBarSpinnerEffect(),
     // new MovieEffect("Fractal-zoom-1-15-rupture.ogv", 17000),
     // new MovieEffect("Plasma_globe_360p.webm"),
     // new MaskLevelEffect(new PyramidEffect[] {

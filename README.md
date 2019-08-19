@@ -11,6 +11,7 @@ Code related to the pyramid
    1. Install video/audio codecs `sudo apt install ubuntu-restricted-extras`
 1. Clone the git repo to your computer
 1. Copy visuals from `Coconauts/Pyramid/Visuals` to the `data/` directory
+   1. copy `Coconauts/Pyramid/Visuals/butterfly` folder from drive into `data/`
    1. Add the visuals as effects
 
 ## How to use
