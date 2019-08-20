@@ -37,7 +37,6 @@ class CycleEffectsEffect extends PyramidEffect {
   void draw(PGraphics g) {
     if (currentDuration >= 0 && millisOfLastEffectChange + currentDuration < millis()) {
 
-      print("duration ", currentDuration, " millisOfLastEffectChange ", millisOfLastEffectChange, "\n");
       changeEffectBy(1);
     }
 

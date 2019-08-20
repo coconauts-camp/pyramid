@@ -10,34 +10,43 @@ class KeyHandler {
   void keyPressed(char key) {}
 }
 
-char KEY_UP = 'w';
-char KEY_LEFT = 'a';
-char KEY_DOWN = 's';
-char KEY_RIGHT = 'd';
+final char KEY_UP = 'w';
+final char KEY_LEFT = 'a';
+final char KEY_DOWN = 's';
+final char KEY_RIGHT = 'd';
 
 void setupEffects(PApplet parent) {
   final CycleEffectsEffect mainCycle = new CycleEffectsEffect(new PyramidEffect[] {
     new HSBColorwheelEffect(),
-    new HSBColorfadeEffect(),
     new ZoomImageEffect(loadImage("mandelbrot_bioluminescence.png")),
+    new HSBColorfadeEffect(),
     new ZoomImageEffect(loadImage("mandelbrot_saturday_confetti.png")),
+    new ButterflyRippleEffect(width, height),
     new ZoomImageEffect(loadImage("mandelbrot_coral_swim.png")),
-    // new RippleEffect(width, height),
-    // new ColorBarSpinnerEffect(),
     new MovieEffect("Plasma_globe_360p.webm"),
   }, 30000);
   final CycleEffectsEffect testCycle = new CycleEffectsEffect(new PyramidEffect[] {
     new TestSpinEffect(),
+    new TestFadeEffect(),
   }, -1);
   final CycleEffectsEffect trippyCycle = new CycleEffectsEffect(new PyramidEffect[] {
     new MovieEffect("trippy.mp4"),
   }, -1);
+  final CycleEffectsEffect rejectsCycle = new CycleEffectsEffect(new PyramidEffect[] {
+    new ColorBarSpinnerEffect(),
+    new MovieEffect("Fractal-zoom-1-15-rupture.ogv", 17000),
+    new RippleEffect(width, height),
+    new ZoomImageEffect(loadImage("mandelbrot_indian_wedding.png")),
+    new RGBColorwheelEffect(),
+    new ZoomImageEffect(loadImage("mandelbrot_inner_current.png")),
+  }, 30000);
 
   effects = new PyramidEffect[] {
     mainCycle,
     testCycle,
     new SoundBarEffect(),
     trippyCycle,
+    rejectsCycle,
   };
 
   keyHandlers = new KeyHandler[] {
@@ -58,6 +67,12 @@ void setupEffects(PApplet parent) {
         switch (key) {
         case KEY_RIGHT: trippyCycle.changeEffectBy(1); break;
         case KEY_LEFT: trippyCycle.changeEffectBy(-1); break;
+        }
+    }},
+    new KeyHandler() { public void keyPressed(char key) {
+        switch (key) {
+        case KEY_RIGHT: rejectsCycle.changeEffectBy(1); break;
+        case KEY_LEFT: rejectsCycle.changeEffectBy(-1); break;
         }
     }},
   };
@@ -110,7 +125,6 @@ void draw() {
 }
 
 void keyPressed() {
-  print("key ", key, "\n");
   switch (key) {
     case KEY_DOWN:
       changeEffectBy(1);

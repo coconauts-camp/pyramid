@@ -1,4 +1,4 @@
-class RippleEffect extends PyramidEffect {
+class ButterflyRippleEffect extends PyramidEffect {
     int cols;
     int rows;
     float[][] current;
@@ -14,7 +14,7 @@ class RippleEffect extends PyramidEffect {
     PImage images[];
     String imageNameTemplate = "butterfly/%d.png";
 
-    public RippleEffect(float width, float height) {
+    public ButterflyRippleEffect(float width, float height) {
         this.cols = (int) width;
         this.rows = (int) height;
 
@@ -33,6 +33,10 @@ class RippleEffect extends PyramidEffect {
 
         current = new float[cols][rows];
         previous = new float[cols][rows];
+    }
+
+    void start(PGraphics g) {
+      g.imageMode(CORNER);
     }
 
     void draw(PGraphics g) {

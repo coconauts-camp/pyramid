@@ -17,10 +17,11 @@ class ColorBarSpinnerEffect extends PyramidEffect {
     }
 
     void start(PGraphics g) {
-        g.background(0);
+        g.colorMode(HSB);
     }
 
     void draw(PGraphics g) {
+        g.background(0);
         for (SpinningColorBar bar : bars) {
             bar.draw(g);
         }
@@ -35,19 +36,22 @@ class ColorBarSpinnerEffect extends PyramidEffect {
         }
 
         void draw(PGraphics g) {
-            if (frameCount % 8 == 0) {
-                g.fill(frameCount * 3 % 255, frameCount * 5 % 255,
-                frameCount * 7 % 255);
-                g.pushMatrix();
-                g.translate(width/2, height/2);
+            int frameCount = (int) (millis() / (1000/60));
+            g.fill(
+                (float) (frameCount * Math.pow(10, seed) * 3 % 255),
+                255,
+                255,
+                128
+            );
+            g.pushMatrix();
+            g.translate(width/2, height/2);
 
 
-                float rad = radians((frameCount * seed) % 360);
-                g.rotate(rad);
+            float rad = radians((frameCount * seed) % 360);
+            g.rotate(rad);
 
-                g.rect(0, 0, 150, 8);
-                g.popMatrix();
-            }
+            g.rect(0, -4, 150, 8);
+            g.popMatrix();
         }
     }
 }

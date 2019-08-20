@@ -25,23 +25,19 @@ class TestSpinEffect extends SpinImageEffect {
 }
 
 class TestFadeEffect extends PyramidEffect {
-  static final int MAX_HUE = 255;
-  int rpm;
-
-  TestFadeEffect() {
-    this(20);
-  }
-
-  TestFadeEffect(int rpm) {
-    this.rpm = rpm;
-  }
+  static final int MILLIS_PER_COLOR = 5000;
+  int startMillis;
 
   void start(PGraphics g) {
     g.colorMode(RGB, 255);
+    startMillis = millis();
   }
 
   void draw(PGraphics g) {
-    final int hue = (int) ((((float) MAX_HUE) * rpm * millis() / 60000) % (MAX_HUE + 1));
-    g.background(hue, 255, 255);
+    final int mils = (millis() - startMillis) % (3 * MILLIS_PER_COLOR);
+    final int red = (int) (256 - Math.abs((mils - 1 * MILLIS_PER_COLOR / 2)) * 2 * 256/MILLIS_PER_COLOR);
+    final int green = (int) (256 - Math.abs((mils - 3 * MILLIS_PER_COLOR / 2)) * 2 * 256/MILLIS_PER_COLOR);
+    final int blue = (int) (256 - Math.abs((mils - 5 * MILLIS_PER_COLOR / 2)) * 2 * 256/MILLIS_PER_COLOR);
+    g.background(red, green, blue);
   }
 }
