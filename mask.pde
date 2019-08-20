@@ -118,6 +118,35 @@ class MaskEffectsEffect extends PyramidEffect {
   }
 }
 
+// Example of crazy use of masks:
+// new MaskLevelEffect(new PyramidEffect[] {
+//   new HSBColorwheelEffect(),
+//   new HSBColorfadeEffect(),
+//   new SoundBarEffect(),
+// }),
+// new MaskSideEffect(new PyramidEffect[] {
+//   new MaskLevelEffect(new PyramidEffect[] {
+//     new HSBColorwheelEffect(),
+//     new HSBColorfadeEffect(),
+//     new SoundBarEffect(),
+//   }),
+//   new MaskLevelEffect(new PyramidEffect[] {
+//     new HSBColorfadeEffect(),
+//     new SoundBarEffect(),
+//     new HSBColorwheelEffect(),
+//   }),
+//   new MaskLevelEffect(new PyramidEffect[] {
+//     new SoundBarEffect(),
+//     new HSBColorwheelEffect(),
+//     new HSBColorfadeEffect(),
+//   }),
+//   new MaskLevelEffect(new PyramidEffect[] {
+//     new HSBColorfadeEffect(-60),
+//     new HSBColorwheelEffect(-60),
+//     new HSBColorfadeEffect(-60),
+//   }),
+// }),
+
 class MaskLevelEffect extends MaskEffectsEffect {
   MaskLevelEffect(PyramidEffect[] effects) {
     super(effects, Masks.levelMasks);

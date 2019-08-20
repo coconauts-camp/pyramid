@@ -1,4 +1,5 @@
 .DS_Store
+_DS_Store
 out
 applet
 application.linux32
@@ -6,11 +7,3 @@ application.linux64
 application.windows32
 application.windows64
 application.macosx
-data/*.wmv
-data/*.ogv
-data/*.webm
-data/*.mp4
-data/*.gif
-data/*.png
-data/*.jpg
-data/*.jpeg

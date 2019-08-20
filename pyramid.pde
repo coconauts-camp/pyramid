@@ -4,55 +4,69 @@ import java.util.Map;
 BeatDetector beatDetector;
 
 PyramidEffect[] effects;
+KeyHandler[] keyHandlers;
+
+class KeyHandler {
+  void keyPressed(char key) {}
+}
+
+char KEY_UP = 'w';
+char KEY_LEFT = 'a';
+char KEY_DOWN = 's';
+char KEY_RIGHT = 'd';
 
 void setupEffects(PApplet parent) {
+  final CycleEffectsEffect mainCycle = new CycleEffectsEffect(new PyramidEffect[] {
+    new HSBColorwheelEffect(),
+    new HSBColorfadeEffect(),
+    new ZoomImageEffect(loadImage("mandelbrot_bioluminescence.png")),
+    new ZoomImageEffect(loadImage("mandelbrot_saturday_confetti.png")),
+    new ZoomImageEffect(loadImage("mandelbrot_coral_swim.png")),
+    // new RippleEffect(width, height),
+    // new ColorBarSpinnerEffect(),
+    new MovieEffect("Plasma_globe_360p.webm"),
+  }, 30000);
+  final CycleEffectsEffect testCycle = new CycleEffectsEffect(new PyramidEffect[] {
+    new TestSpinEffect(),
+  }, -1);
+  final CycleEffectsEffect trippyCycle = new CycleEffectsEffect(new PyramidEffect[] {
+    new MovieEffect("trippy.mp4"),
+  }, -1);
+
   effects = new PyramidEffect[] {
-    // new TestSpinEffect(),
-     //new HSBColorwheelEffect(),
-    // new RGBColorwheelEffect(),
-    // new HSBColorfadeEffect(),
-    // new SoundBarEffect(),
-    //new ZoomImageEffect(loadImage("mandelbrot_bioluminescence.png")),
-    //new ZoomImageEffect(loadImage("mandelbrot_indian_wedding.png")),
-    //new ZoomImageEffect(loadImage("mandelbrot_saturday_confetti.png")),
-    //new ZoomImageEffect(loadImage("mandelbrot_inner_current.png")),
-    //new ZoomImageEffect(loadImage("mandelbrot_coral_swim.png")),
-    //new RippleEffect(width, height),
-    new ColorBarSpinnerEffect(),
-    // new MovieEffect("Fractal-zoom-1-15-rupture.ogv", 17000),
-    // new MovieEffect("Plasma_globe_360p.webm"),
-    // new MaskLevelEffect(new PyramidEffect[] {
-    //   new HSBColorwheelEffect(),
-    //   new HSBColorfadeEffect(),
-    //   new SoundBarEffect(),
-    // }),
-    // new MaskSideEffect(new PyramidEffect[] {
-    //   new MaskLevelEffect(new PyramidEffect[] {
-    //     new HSBColorwheelEffect(),
-    //     new HSBColorfadeEffect(),
-    //     new SoundBarEffect(),
-    //   }),
-    //   new MaskLevelEffect(new PyramidEffect[] {
-    //     new HSBColorfadeEffect(),
-    //     new SoundBarEffect(),
-    //     new HSBColorwheelEffect(),
-    //   }),
-    //   new MaskLevelEffect(new PyramidEffect[] {
-    //     new SoundBarEffect(),
-    //     new HSBColorwheelEffect(),
-    //     new HSBColorfadeEffect(),
-    //   }),
-    //   new MaskLevelEffect(new PyramidEffect[] {
-    //     new HSBColorfadeEffect(-60),
-    //     new HSBColorwheelEffect(-60),
-    //     new HSBColorfadeEffect(-60),
-    //   }),
-    // }),
+    mainCycle,
+    testCycle,
+    new SoundBarEffect(),
+    trippyCycle,
   };
+
+  keyHandlers = new KeyHandler[] {
+    new KeyHandler() { public void keyPressed(char key) {
+        switch (key) {
+        case KEY_RIGHT: mainCycle.changeEffectBy(1); break;
+        case KEY_LEFT: mainCycle.changeEffectBy(-1); break;
+        }
+    }},
+    new KeyHandler() { public void keyPressed(char key) {
+        switch (key) {
+        case KEY_RIGHT: testCycle.changeEffectBy(1); break;
+        case KEY_LEFT: testCycle.changeEffectBy(-1); break;
+        }
+    }},
+    new KeyHandler(),
+    new KeyHandler() { public void keyPressed(char key) {
+        switch (key) {
+        case KEY_RIGHT: trippyCycle.changeEffectBy(1); break;
+        case KEY_LEFT: trippyCycle.changeEffectBy(-1); break;
+        }
+    }},
+  };
+
 
   for (PyramidEffect effect: effects) {
     effect.setup(this);
   }
+  changeEffectBy(1);
 }
 
 void setup() {
@@ -71,22 +85,21 @@ void setup() {
   setupEffects(this);
 }
 
-int MAX_DURATION = 30 * 1000;
 int effectIndex = -1;
 PyramidEffect currentEffect;
-int currentDuration = 0;
-int millisOfLastEffectChange = -1;
+
+void changeEffectBy(int change) {
+  effectIndex = (effectIndex + change) % effects.length;
+  if (effectIndex < 0) effectIndex += effects.length;
+  if (currentEffect != null) currentEffect.stop(g);
+  currentEffect = effects[effectIndex];
+  currentEffect.start(g);
+}
 
 void draw() {
   if (effects.length == 0) throw new RuntimeException("No effects found");
-  if (millisOfLastEffectChange + currentDuration < millis()) {
-    millisOfLastEffectChange = millis();
-    effectIndex = (effectIndex + 1) % effects.length;
-    if (currentEffect != null) currentEffect.stop(g);
-    currentEffect = effects[effectIndex];
-    currentEffect.start(g);
-    currentDuration = currentEffect.duration();
-    if (currentDuration > MAX_DURATION) currentDuration = MAX_DURATION;
+  if (effects.length != keyHandlers.length) {
+    throw new RuntimeException("Need same number of keyHandlers as effects");
   }
 
   pushMatrix();
@@ -94,6 +107,21 @@ void draw() {
   popMatrix();
 
   // doBeat(g);
+}
+
+void keyPressed() {
+  print("key ", key, "\n");
+  switch (key) {
+    case KEY_DOWN:
+      changeEffectBy(1);
+    break;
+    case KEY_UP:
+      changeEffectBy(-1);
+    break;
+    default:
+      if (effectIndex >= 0) keyHandlers[effectIndex].keyPressed(key);
+    break;
+  }
 }
 
 void doBeat(PGraphics g) {
