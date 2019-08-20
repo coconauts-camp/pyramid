@@ -3,15 +3,16 @@ class RippleEffect extends PyramidEffect {
     int rows;
     float[][] current;
     float[][] previous;
-    
+
+    int fps = 30;
+    int previousFrame = -1;
     float dampening = 0.98;
     int refreshRate;
     int IMAGE_COUNT = 60;
 
     PGraphics topLevel;
-    PImage images[] = new PImage[IMAGE_COUNT];
+    PImage images[];
     String imageNameTemplate = "butterfly/%d.png";
-    int cursor = 0;
 
     public RippleEffect(float width, float height) {
         this.cols = (int) width;
@@ -21,11 +22,11 @@ class RippleEffect extends PyramidEffect {
         previous = new float[cols][rows];
     }
     void setup(PApplet parent) {
-        parent.smooth();
+        images = new PImage[IMAGE_COUNT];
         for (int cnt = 1; cnt <= IMAGE_COUNT; cnt++) {
-            images[cnt - 1] = loadImage(String.format(imageNameTemplate, cnt));
+            images[cnt - 1] = parent.loadImage(String.format(imageNameTemplate, cnt));
         }
-        topLevel = createGraphics(cols, rows, g.getClass().getName());
+        topLevel = parent.createGraphics(cols, rows, g.getClass().getName());
 
         cols = images[0].width;
         rows = images[0].height;
@@ -35,18 +36,16 @@ class RippleEffect extends PyramidEffect {
     }
 
     void draw(PGraphics g) {
-        if (frameCount % 2 == 0) {
-            cursor = cursor < (IMAGE_COUNT - 1) ? ++cursor : 0;
-            image(images[cursor], 0, 0, cols, rows);
-
+        final int frame = (int) ((millis() / (1000.0 / fps)) % IMAGE_COUNT);
+        g.image(images[frame], 0, 0, cols, rows);
+        if (frame != previousFrame) {
+            previousFrame = frame;
             topLevel.beginDraw();
             drawRipple(topLevel);
             topLevel.endDraw();
-            image(topLevel, 0, 0);
         }
+        g.image(topLevel, 0, 0);
     }
-
-    void start(PGraphics g) { }
 
     void drawRipple(PGraphics g) {
         g.background(0, 10);
@@ -66,6 +65,7 @@ class RippleEffect extends PyramidEffect {
                 current[i][j] = current[i][j] * dampening;
 
                 g.pixels[index] = color(current[i][j] * 300, 60);
+                // g.pixels[index] = color(255, current[i][j] * 180);
             }
         }
         g.updatePixels();
@@ -75,6 +75,7 @@ class RippleEffect extends PyramidEffect {
 
     void setRippleCenter() {
         if (refreshRate % 40 == 0) {
+            refreshRate = 0;
             current[(int) random(lowerBound(cols), upperBound(cols))][(int) random(lowerBound(rows), upperBound(rows))] = 255;
         }
         ++refreshRate;
