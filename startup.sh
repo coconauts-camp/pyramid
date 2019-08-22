@@ -4,7 +4,7 @@ vncserver -kill :1
 sleep 1
 
 vncserver :1
-sleep 1
+sleep 5
 
 export DISPLAY=:1
 
@@ -17,7 +17,7 @@ else
   echo "No internet: not updating" >> ~/pyramid.log
 fi
 
-qjoypad &
+qjoypad "Gamepad" &
 
 # Make sure fcserver is running
 sudo ~/fadecandy/bin/fcserver-rpi ~/pyramid/fcserver-config.json >> ~/fcserver.log 2>&1 &
