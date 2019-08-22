@@ -30,7 +30,7 @@ void setupEffects(PApplet parent) {
     new TestFadeEffect(),
   }, -1);
   final CycleEffectsEffect trippyCycle = new CycleEffectsEffect(new PyramidEffect[] {
-    new MovieEffect("trippy.mp4"),
+    new MovieEffect("trippy.ogv"),
   }, -1);
   final CycleEffectsEffect rejectsCycle = new CycleEffectsEffect(new PyramidEffect[] {
     new ColorBarSpinnerEffect(),
