@@ -13,6 +13,6 @@ static class Point {
 static void rotatePoint(Point p, float angle) {
   float x = p.x;
   float y = p.y;
-  p.x = (float) (x * Math.cos(angle) + y * Math.sin(angle));
-  p.y = (float) (x * Math.sin(angle) - y * Math.cos(angle));
+  p.x = (float) (x * Math.cos(angle) - y * Math.sin(angle));
+  p.y = (float) (x * Math.sin(angle) + y * Math.cos(angle));
 }

@@ -54,8 +54,8 @@ static class Mo {
     // |  /     _\| |
     // |/___________|
 
-    Point eyeR = Point.create(eyeX, -eyeY);
-    Point eyeL = Point.create(eyeX,  eyeY);
+    Point eyeR = Point.create(eyeX,  eyeY);
+    Point eyeL = Point.create(eyeX, -eyeY);
     // now rotate to correct angle
     rotatePoint(eyeR, angle);
     rotatePoint(eyeL, angle);
@@ -66,8 +66,9 @@ static class Mo {
     float halfWidth = baseWidth / 2;
     float halfDepth = baseDepth / 2;
     // as if at the origin facing +X (E)
-    Point u1 = Point.create(halfDepth, -halfWidth);
-    Point u2 = Point.create(halfDepth,  halfWidth);
+    Point u1 = Point.create(halfDepth,  halfWidth);
+    Point u2 = Point.create(halfDepth, -halfWidth);
+
     // now rotate to correct angle
     rotatePoint(u1, angle);
     rotatePoint(u2, angle);
