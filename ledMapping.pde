@@ -10,10 +10,11 @@ static class Pyramid {
   };
 
   static final int[][] ledStartSigns = {
-    { 1, -1, 180}, // N x, y, strip direction (degrees)
-    { 1,  1, 270}, // E
-    {-1,  1,   0}, // S
-    {-1, -1,  90}, // W
+    // x, y, strip direction (degrees)
+    { 1, -1, 180}, // N Pattern-painted side
+    { 1,  1, 270}, // E Good painted side
+    {-1,  1,   0}, // S Splatter painted side
+    {-1, -1,  90}, // W Good German painted side
   };
 }
 
@@ -38,21 +39,35 @@ static class Mo {
     // Mo eyes
     float eyeX = topDepth / 2;
     float eyeY = eyeDist / 2;
+
     // as if at the origin facing +X (E)
-    Point e1 = Point.create(eyeX,  eyeY);
-    Point e2 = Point.create(eyeX, -eyeY);
+    // Everything is counter clockwise direction because that's how the strips
+    // are connected to the pyramid.
+    //  ____________
+    // |\       _   |
+    // |  \ ____ /| |
+    // |   |    | | |
+    // |   |    |*| |
+    // |   |    |^| ^
+    // |   |    |*| |
+    // |   |____| | |
+    // |  /     _\| |
+    // |/___________|
+
+    Point eyeR = Point.create(eyeX, -eyeY);
+    Point eyeL = Point.create(eyeX,  eyeY);
     // now rotate to correct angle
-    rotatePoint(e1, angle);
-    rotatePoint(e2, angle);
-    opc.ledGrid8x8(index + 0 * 64, x + e1.x, y + e1.y, 1, angle, false, false);
-    opc.ledGrid8x8(index + 1 * 64, x + e2.x, y + e2.y, 1, angle, false, false);
+    rotatePoint(eyeR, angle);
+    rotatePoint(eyeL, angle);
+    opc.ledGrid8x8(index + 0 * 64, x + eyeR.x, y + eyeR.y, 1, angle, false, false);
+    opc.ledGrid8x8(index + 1 * 64, x + eyeL.x, y + eyeL.y, 1, angle, false, false);
 
     // Mo up light
     float halfWidth = baseWidth / 2;
     float halfDepth = baseDepth / 2;
     // as if at the origin facing +X (E)
-    Point u1 = Point.create(halfDepth,  halfWidth);
-    Point u2 = Point.create(halfDepth, -halfWidth);
+    Point u1 = Point.create(halfDepth, -halfWidth);
+    Point u2 = Point.create(halfDepth,  halfWidth);
     // now rotate to correct angle
     rotatePoint(u1, angle);
     rotatePoint(u2, angle);
@@ -95,12 +110,9 @@ void setupLedMapping(PApplet parent) {
 
   float centerX = width / 2;
   float centerY = height / 2;
-  float x = 0;
-  float y = 0;
-  float halfSize = 0;
 
-  // Mo faces NW
-  Mo.placeLeds(opc, SPECIAL, centerX, centerY, radians(225));
+  // Mo faces NE
+  Mo.placeLeds(opc, SPECIAL, centerX, centerY, radians(315));
 
   // Level orientation
   // "arrow" is strip direction

@@ -18,27 +18,22 @@ final char KEY_RIGHT = 'd';
 void setupEffects(PApplet parent) {
   final CycleEffectsEffect mainCycle = new CycleEffectsEffect(new PyramidEffect[] {
     new HSBColorwheelEffect(),
-    new ZoomImageEffect(loadImage("mandelbrot_bioluminescence.png")),
     new HSBColorfadeEffect(),
-    new ZoomImageEffect(loadImage("mandelbrot_saturday_confetti.png")),
     new ButterflyRippleEffect(width, height),
-    new ZoomImageEffect(loadImage("mandelbrot_coral_swim.png")),
     new MovieEffect("Plasma_globe_360p.webm"),
   }, 30000);
   final CycleEffectsEffect testCycle = new CycleEffectsEffect(new PyramidEffect[] {
     new TestSpinEffect(),
     new TestFadeEffect(),
+    new HSBColorwheelEffect(0),
   }, -1);
   final CycleEffectsEffect trippyCycle = new CycleEffectsEffect(new PyramidEffect[] {
     new MovieEffect("trippy.ogv"),
   }, -1);
   final CycleEffectsEffect rejectsCycle = new CycleEffectsEffect(new PyramidEffect[] {
     new ColorBarSpinnerEffect(),
-    new MovieEffect("Fractal-zoom-1-15-rupture.ogv", 17000),
     new RippleEffect(width, height),
-    new ZoomImageEffect(loadImage("mandelbrot_indian_wedding.png")),
     new RGBColorwheelEffect(),
-    new ZoomImageEffect(loadImage("mandelbrot_inner_current.png")),
   }, 30000);
 
   effects = new PyramidEffect[] {
